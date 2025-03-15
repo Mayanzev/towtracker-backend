@@ -2,6 +2,7 @@ package com.mayantsev_vs
 
 import com.mayantsev_vs.features.login.configureLoginRouting
 import com.mayantsev_vs.features.register.configureRegisterRouting
+import com.mayantsev_vs.user.configureUserRouting
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
 import io.ktor.server.engine.*
@@ -24,4 +25,5 @@ fun Application.module() {
     configureRouting()
     configureLoginRouting()
     configureRegisterRouting()
+    configureUserRouting()
 }

@@ -1,6 +1,5 @@
 package com.mayantsev_vs.database.users
 
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
@@ -22,7 +21,6 @@ object Users: Table() {
     }
 
     fun fetchUser(login: String): UserDTO? {
-
         return try {
             transaction {
                 val userModel = Users.selectAll().where { Users.login eq login }.single()

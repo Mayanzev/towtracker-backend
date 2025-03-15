@@ -1,7 +1,5 @@
 package com.mayantsev_vs.features.register
 
-import com.mayantsev_vs.cache.InMemoryCache
-import com.mayantsev_vs.cache.TokenCache
 import com.mayantsev_vs.database.tokens.TokenDTO
 import com.mayantsev_vs.database.tokens.Tokens
 import com.mayantsev_vs.database.users.UserDTO
@@ -13,7 +11,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import java.util.*
-import kotlin.math.log
 
 class RegisterController(private val call: ApplicationCall) {
 
@@ -35,7 +32,7 @@ class RegisterController(private val call: ApplicationCall) {
                     UserDTO(
                         login = registerReceiveRemote.login,
                         password = registerReceiveRemote.password,
-                        username = ""
+                        username = registerReceiveRemote.username
                     )
                 )
             } catch (e: ExposedSQLException) {
