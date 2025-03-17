@@ -1,4 +1,4 @@
-package com.mayantsev_vs.user
+package com.mayantsev_vs.features.user
 
 import kotlinx.serialization.Serializable
 

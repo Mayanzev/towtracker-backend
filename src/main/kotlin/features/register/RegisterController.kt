@@ -4,6 +4,7 @@ import com.mayantsev_vs.database.tokens.TokenDTO
 import com.mayantsev_vs.database.tokens.Tokens
 import com.mayantsev_vs.database.users.UserDTO
 import com.mayantsev_vs.database.users.Users
+import com.mayantsev_vs.utils.hashPassword
 import com.mayantsev_vs.utils.isValidEmail
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -16,6 +17,8 @@ class RegisterController(private val call: ApplicationCall) {
 
     suspend fun registerNewUser() {
         val registerReceiveRemote = call.receive<RegisterReceiveRemote>()
+        val hashedPassword = hashPassword(registerReceiveRemote.password)
+
         if (!registerReceiveRemote.login.isValidEmail()) {
             call.respond(HttpStatusCode.BadRequest, "Email is not valid")
         }
@@ -31,7 +34,7 @@ class RegisterController(private val call: ApplicationCall) {
                 Users.insert(
                     UserDTO(
                         login = registerReceiveRemote.login,
-                        password = registerReceiveRemote.password,
+                        password = hashedPassword,
                         username = registerReceiveRemote.username
                     )
                 )

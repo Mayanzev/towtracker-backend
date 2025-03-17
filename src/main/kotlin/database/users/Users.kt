@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.update
 
 object Users: Table() {
     private val login = Users.varchar("login", 25)
-    private val password = Users.varchar("password", 25)
+    private val password = Users.varchar("password", 75)
     private val username = Users.varchar("username", 30)
 
     fun insert(userDTO: UserDTO) {

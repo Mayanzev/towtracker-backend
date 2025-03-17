@@ -34,4 +34,6 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.60.0")
 
     implementation("org.postgresql:postgresql:42.7.2")
+
+    implementation("at.favre.lib:bcrypt:0.10.2")
 }
