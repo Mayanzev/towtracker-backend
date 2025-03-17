@@ -1,10 +1,13 @@
 package com.mayantsev_vs.user
 
 import com.mayantsev_vs.database.tokens.Tokens
+import com.mayantsev_vs.database.users.UserDTO
 import com.mayantsev_vs.database.users.Users
+import com.mayantsev_vs.features.register.RegisterReceiveRemote
 import com.mayantsev_vs.utils.TokenCheck
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 
 class UserController(private val call: ApplicationCall) {
@@ -25,6 +28,23 @@ class UserController(private val call: ApplicationCall) {
             } else {
                 call.respond(HttpStatusCode.BadRequest, "User not found")
             }
+        } else {
+            call.respond(HttpStatusCode.Unauthorized, "Token expired")
+        }
+    }
+
+    suspend fun updateUser() {
+        val token = call.request.headers["Bearer-Authorization"]
+        val userReceiveRemote = call.receive<UserReceiveRemote>()
+
+        if (TokenCheck.isTokenValid(token.orEmpty())) {
+            val userDTO = UserDTO(
+                login = userReceiveRemote.login,
+                password = userReceiveRemote.password,
+                username = userReceiveRemote.username
+            )
+            Users.update(userDTO)
+            call.respond(HttpStatusCode.OK)
         } else {
             call.respond(HttpStatusCode.Unauthorized, "Token expired")
         }

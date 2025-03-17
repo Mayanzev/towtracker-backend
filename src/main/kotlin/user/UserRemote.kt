@@ -8,3 +8,10 @@ data class UserResponseRemote(
     val password: String,
     val username: String
 )
+
+@Serializable
+data class UserReceiveRemote(
+    val login: String,
+    val password: String,
+    val username: String
+)

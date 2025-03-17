@@ -1,9 +1,11 @@
 package com.mayantsev_vs.database.users
 
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 
 object Users: Table() {
     private val login = Users.varchar("login", 25)
@@ -13,6 +15,16 @@ object Users: Table() {
     fun insert(userDTO: UserDTO) {
         transaction {
             Users.insert {
+                it[login] = userDTO.login
+                it[password] = userDTO.password
+                it[username] = userDTO.username
+            }
+        }
+    }
+
+    fun update(userDTO: UserDTO) {
+        transaction {
+            Users.update ({ login eq userDTO.login }) {
                 it[login] = userDTO.login
                 it[password] = userDTO.password
                 it[username] = userDTO.username
