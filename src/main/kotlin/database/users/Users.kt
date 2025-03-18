@@ -22,16 +22,6 @@ object Users: Table() {
         }
     }
 
-    fun update(userDTO: UserDTO) {
-        transaction {
-            Users.update ({ login eq userDTO.login }) {
-                it[login] = userDTO.login
-                it[password] = userDTO.password
-                it[username] = userDTO.username
-            }
-        }
-    }
-
     fun fetchUser(login: String): UserDTO? {
         return try {
             transaction {
@@ -46,4 +36,23 @@ object Users: Table() {
             null
         }
     }
+
+    fun updateUsername(usernameDTO: UsernameDTO) {
+        transaction {
+            Users.update ({ login eq usernameDTO.login }) {
+                it[login] = usernameDTO.login
+                it[username] = usernameDTO.username
+            }
+        }
+    }
+
+    fun updatePassword(passwordDTO: PasswordDTO) {
+        transaction {
+            Users.update ({ login eq passwordDTO.login }) {
+                it[login] = passwordDTO.login
+                it[password] = passwordDTO.password
+            }
+        }
+    }
+
 }

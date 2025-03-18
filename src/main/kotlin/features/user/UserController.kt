@@ -1,10 +1,13 @@
 package com.mayantsev_vs.features.user
 
 import com.mayantsev_vs.database.tokens.Tokens
-import com.mayantsev_vs.database.users.UserDTO
+import com.mayantsev_vs.database.users.PasswordDTO
+import com.mayantsev_vs.database.users.UsernameDTO
 import com.mayantsev_vs.database.users.Users
+import com.mayantsev_vs.features.login.LoginReceiveRemote
 import com.mayantsev_vs.utils.TokenCheck
 import com.mayantsev_vs.utils.hashPassword
+import com.mayantsev_vs.utils.verifyPassword
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -21,7 +24,6 @@ class UserController(private val call: ApplicationCall) {
             if (user != null) {
                 val userRemote = UserResponseRemote(
                     login = user.login,
-                    password = user.password,
                     username = user.username
                 )
                 call.respond(userRemote)
@@ -36,16 +38,37 @@ class UserController(private val call: ApplicationCall) {
     suspend fun updateUser() {
         val token = call.request.headers["Bearer-Authorization"]
         val userReceiveRemote = call.receive<UserReceiveRemote>()
-        val hashedPassword = hashPassword(userReceiveRemote.password)
 
         if (TokenCheck.isTokenValid(token.orEmpty())) {
-            val userDTO = UserDTO(
+            val usernameDTO = UsernameDTO(
                 login = userReceiveRemote.login,
-                password = hashedPassword,
                 username = userReceiveRemote.username
             )
-            Users.update(userDTO)
+            Users.updateUsername(usernameDTO)
             call.respond(HttpStatusCode.OK)
+        } else {
+            call.respond(HttpStatusCode.Unauthorized, "Token expired")
+        }
+    }
+
+    suspend fun updateUserPassword() {
+        val token = call.request.headers["Bearer-Authorization"]
+        val userPasswordReceiveRemote = call.receive<UserPasswordReceiveRemote>()
+        val userDTO = Users.fetchUser(userPasswordReceiveRemote.login)
+
+        if (TokenCheck.isTokenValid(token.orEmpty())) {
+            if (userDTO == null) {
+                call.respond(HttpStatusCode.BadRequest, "User not found")
+            } else if (verifyPassword(userPasswordReceiveRemote.password, userDTO.password)) {
+                val passwordDTO = PasswordDTO(
+                    login = userPasswordReceiveRemote.login,
+                    password = hashPassword(userPasswordReceiveRemote.newPassword)
+                )
+                Users.updatePassword(passwordDTO)
+                call.respond(HttpStatusCode.OK)
+            } else {
+                call.respond(HttpStatusCode.BadRequest, "Старый пароль введен неверно!")
+            }
         } else {
             call.respond(HttpStatusCode.Unauthorized, "Token expired")
         }
