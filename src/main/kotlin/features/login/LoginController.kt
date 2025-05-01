@@ -13,18 +13,18 @@ import java.util.*
 class LoginController(private val call: ApplicationCall) {
 
     suspend fun performLogin() {
-        val receive = call.receive<LoginReceiveDTO>()
-        val userDTO = Users.fetchUser(receive.login)
+        val loginRequestDTO = call.receive<LoginRequestDTO>()
+        val userDTO = Users.fetchUser(loginRequestDTO.login)
 
         if (userDTO == null) {
             call.respond(HttpStatusCode.BadRequest, "User not found")
         } else {
-            if (verifyPassword(receive.password, userDTO.password)) {
+            if (verifyPassword(loginRequestDTO.password, userDTO.password)) {
                 val token = UUID.randomUUID().toString()
                 Tokens.insert(
                     TokenDBO(
                         rowId = UUID.randomUUID().toString(),
-                        login = receive.login,
+                        login = loginRequestDTO.login,
                         token = token
                     )
                 )

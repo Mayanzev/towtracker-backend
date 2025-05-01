@@ -36,12 +36,12 @@ class UserController(private val call: ApplicationCall) {
 
     suspend fun updateUser() {
         val token = call.request.headers["Bearer-Authorization"]
-        val userReceiveDTO = call.receive<UserReceiveDTO>()
+        val userRequestDTO = call.receive<UserRequestDTO>()
 
         if (TokenCheck.isTokenValid(token.orEmpty())) {
             val usernameDBO = UsernameDBO(
-                login = userReceiveDTO.login,
-                username = userReceiveDTO.username
+                login = userRequestDTO.login,
+                username = userRequestDTO.username
             )
             Users.updateUsername(usernameDBO)
             call.respond(HttpStatusCode.OK)
@@ -52,16 +52,16 @@ class UserController(private val call: ApplicationCall) {
 
     suspend fun updateUserPassword() {
         val token = call.request.headers["Bearer-Authorization"]
-        val userPasswordReceiveDTO = call.receive<UserPasswordReceiveDTO>()
-        val userDTO = Users.fetchUser(userPasswordReceiveDTO.login)
+        val userPasswordRequestDTO = call.receive<UserPasswordRequestDTO>()
+        val userRequestDTO = Users.fetchUser(userPasswordRequestDTO.login)
 
         if (TokenCheck.isTokenValid(token.orEmpty())) {
-            if (userDTO == null) {
+            if (userRequestDTO == null) {
                 call.respond(HttpStatusCode.BadRequest, "User not found")
-            } else if (verifyPassword(userPasswordReceiveDTO.password, userDTO.password)) {
+            } else if (verifyPassword(userPasswordRequestDTO.password, userRequestDTO.password)) {
                 val passwordDBO = PasswordDBO(
-                    login = userPasswordReceiveDTO.login,
-                    password = hashPassword(userPasswordReceiveDTO.newPassword)
+                    login = userPasswordRequestDTO.login,
+                    password = hashPassword(userPasswordRequestDTO.newPassword)
                 )
                 Users.updatePassword(passwordDBO)
                 call.respond(HttpStatusCode.OK)

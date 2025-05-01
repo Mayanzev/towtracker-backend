@@ -16,14 +16,14 @@ import java.util.*
 class RegisterController(private val call: ApplicationCall) {
 
     suspend fun registerNewUser() {
-        val registerReceiveDTO = call.receive<RegisterReceiveDTO>()
-        val hashedPassword = hashPassword(registerReceiveDTO.password)
+        val registerRequestDTO = call.receive<RegisterRequestDTO>()
+        val hashedPassword = hashPassword(registerRequestDTO.password)
 
-        if (!registerReceiveDTO.login.isValidEmail()) {
+        if (!registerRequestDTO.login.isValidEmail()) {
             call.respond(HttpStatusCode.BadRequest, "Email is not valid")
         }
 
-        val userDTO = Users.fetchUser(registerReceiveDTO.login)
+        val userDTO = Users.fetchUser(registerRequestDTO.login)
 
         if (userDTO != null) {
             call.respond(HttpStatusCode.Conflict, "User already exists")
@@ -33,9 +33,9 @@ class RegisterController(private val call: ApplicationCall) {
             try {
                 Users.insert(
                     UserDBO(
-                        login = registerReceiveDTO.login,
+                        login = registerRequestDTO.login,
                         password = hashedPassword,
-                        username = registerReceiveDTO.username
+                        username = registerRequestDTO.username
                     )
                 )
             } catch (e: ExposedSQLException) {
@@ -44,7 +44,7 @@ class RegisterController(private val call: ApplicationCall) {
 
             Tokens.insert(
                 TokenDBO(
-                    rowId = UUID.randomUUID().toString(), login = registerReceiveDTO.login, token = token
+                    rowId = UUID.randomUUID().toString(), login = registerRequestDTO.login, token = token
                 )
             )
             call.respond(RegisterResponseDTO(token = token))

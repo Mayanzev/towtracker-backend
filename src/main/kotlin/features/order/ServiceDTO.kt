@@ -3,7 +3,7 @@ package com.mayantsev_vs.features.order
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ServiceReceiveDTO(
+data class ServiceRequestDTO(
     val id: Int,
     val name: String,
     val price: String,

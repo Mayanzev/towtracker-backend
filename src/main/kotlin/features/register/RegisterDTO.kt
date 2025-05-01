@@ -3,7 +3,7 @@ package com.mayantsev_vs.features.register
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegisterReceiveDTO (
+data class RegisterRequestDTO (
     val login: String,
     val password: String,
     val username: String

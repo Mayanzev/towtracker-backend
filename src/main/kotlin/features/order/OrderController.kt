@@ -14,7 +14,7 @@ class OrderController(private val call: ApplicationCall) {
 
     suspend fun insertOrder() {
         val token = call.request.headers["Bearer-Authorization"]
-        val orderReceiveDTO = call.receive<OrderReceiveDTO>()
+        val orderRequestDTO = call.receive<OrderRequestDTO>()
 
         if (TokenCheck.isTokenValid(token.orEmpty())) {
             val login = token?.let { Tokens.fetchLogin(it) }
@@ -23,7 +23,7 @@ class OrderController(private val call: ApplicationCall) {
                 Orders.insert(
                     OrdersDBO(
                         date = LocalDateTime.now(),
-                        tracks = orderReceiveDTO.tracks.map {
+                        tracks = orderRequestDTO.tracks.map {
                             TracksDBO(
                                 it.id,
                                 it.time,
@@ -35,7 +35,7 @@ class OrderController(private val call: ApplicationCall) {
                                 it.secondCity
                             )
                         },
-                        services = orderReceiveDTO.services.map {
+                        services = orderRequestDTO.services.map {
                             ServicesDBO(
                                 it.id,
                                 it.name,

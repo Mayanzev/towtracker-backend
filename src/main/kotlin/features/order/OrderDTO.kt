@@ -3,9 +3,9 @@ package com.mayantsev_vs.features.order
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OrderReceiveDTO(
-    val tracks: List<TrackReceiveDTO>,
-    val services: List<ServiceReceiveDTO>
+data class OrderRequestDTO(
+    val tracks: List<TrackRequestDTO>,
+    val services: List<ServiceRequestDTO>
 )
 
 @Serializable

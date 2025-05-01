@@ -3,7 +3,7 @@ package com.mayantsev_vs.features.login
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginReceiveDTO(
+data class LoginRequestDTO(
     val login: String,
     val password: String
 )

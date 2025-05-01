@@ -3,7 +3,7 @@ package com.mayantsev_vs.features.order
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TrackReceiveDTO(
+data class TrackRequestDTO(
     val id: Int,
     val time: String,
     val date: String,

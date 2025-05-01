@@ -9,13 +9,13 @@ data class UserResponseDTO(
 )
 
 @Serializable
-data class UserReceiveDTO(
+data class UserRequestDTO(
     val login: String,
     val username: String
 )
 
 @Serializable
-data class UserPasswordReceiveDTO(
+data class UserPasswordRequestDTO(
     val login: String,
     val password: String,
     val newPassword: String
