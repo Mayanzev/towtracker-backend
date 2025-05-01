@@ -21,7 +21,7 @@ class UserController(private val call: ApplicationCall) {
             val login = token?.let { Tokens.fetchLogin(it) }
             val user = login?.let { Users.fetchUser(login) }
             if (user != null) {
-                val userRemote = UserResponseRemote(
+                val userRemote = UserResponseDTO(
                     login = user.login,
                     username = user.username
                 )
@@ -36,12 +36,12 @@ class UserController(private val call: ApplicationCall) {
 
     suspend fun updateUser() {
         val token = call.request.headers["Bearer-Authorization"]
-        val userReceiveRemote = call.receive<UserReceiveRemote>()
+        val userReceiveDTO = call.receive<UserReceiveDTO>()
 
         if (TokenCheck.isTokenValid(token.orEmpty())) {
             val usernameDBO = UsernameDBO(
-                login = userReceiveRemote.login,
-                username = userReceiveRemote.username
+                login = userReceiveDTO.login,
+                username = userReceiveDTO.username
             )
             Users.updateUsername(usernameDBO)
             call.respond(HttpStatusCode.OK)
@@ -52,16 +52,16 @@ class UserController(private val call: ApplicationCall) {
 
     suspend fun updateUserPassword() {
         val token = call.request.headers["Bearer-Authorization"]
-        val userPasswordReceiveRemote = call.receive<UserPasswordReceiveRemote>()
-        val userDTO = Users.fetchUser(userPasswordReceiveRemote.login)
+        val userPasswordReceiveDTO = call.receive<UserPasswordReceiveDTO>()
+        val userDTO = Users.fetchUser(userPasswordReceiveDTO.login)
 
         if (TokenCheck.isTokenValid(token.orEmpty())) {
             if (userDTO == null) {
                 call.respond(HttpStatusCode.BadRequest, "User not found")
-            } else if (verifyPassword(userPasswordReceiveRemote.password, userDTO.password)) {
+            } else if (verifyPassword(userPasswordReceiveDTO.password, userDTO.password)) {
                 val passwordDBO = PasswordDBO(
-                    login = userPasswordReceiveRemote.login,
-                    password = hashPassword(userPasswordReceiveRemote.newPassword)
+                    login = userPasswordReceiveDTO.login,
+                    password = hashPassword(userPasswordReceiveDTO.newPassword)
                 )
                 Users.updatePassword(passwordDBO)
                 call.respond(HttpStatusCode.OK)

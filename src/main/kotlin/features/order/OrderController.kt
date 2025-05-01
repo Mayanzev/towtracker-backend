@@ -14,7 +14,7 @@ class OrderController(private val call: ApplicationCall) {
 
     suspend fun insertOrder() {
         val token = call.request.headers["Bearer-Authorization"]
-        val orderReceiveRemote = call.receive<OrderReceiveRemote>()
+        val orderReceiveDTO = call.receive<OrderReceiveDTO>()
 
         if (TokenCheck.isTokenValid(token.orEmpty())) {
             val login = token?.let { Tokens.fetchLogin(it) }
@@ -23,7 +23,7 @@ class OrderController(private val call: ApplicationCall) {
                 Orders.insert(
                     OrdersDBO(
                         date = LocalDateTime.now(),
-                        tracks = orderReceiveRemote.tracks.map {
+                        tracks = orderReceiveDTO.tracks.map {
                             TracksDBO(
                                 it.id,
                                 it.time,
@@ -35,7 +35,7 @@ class OrderController(private val call: ApplicationCall) {
                                 it.secondCity
                             )
                         },
-                        services = orderReceiveRemote.services.map {
+                        services = orderReceiveDTO.services.map {
                             ServicesDBO(
                                 it.id,
                                 it.name,
@@ -62,11 +62,11 @@ class OrderController(private val call: ApplicationCall) {
             val login = token?.let { Tokens.fetchLogin(it) }
             val user = login?.let { Users.fetchUser(login) }
             if (user != null) {
-                val orderListRemote = OrderListResponseRemote(
+                val orderListRemote = OrderListResponseDTO(
                     Orders.getOrders(login).map { order ->
-                        OrderResponseRemote(
+                        OrderResponseDTO(
                             order.tracks.map {
-                                TrackResponseRemote(
+                                TrackResponseDTO(
                                     time = it.time,
                                     date = it.date,
                                     distance = it.distance,
@@ -77,7 +77,7 @@ class OrderController(private val call: ApplicationCall) {
                                 )
                             },
                             order.services.map {
-                                ServiceResponseRemote(
+                                ServiceResponseDTO(
                                     name = it.name,
                                     price = it.price,
                                     date = it.date

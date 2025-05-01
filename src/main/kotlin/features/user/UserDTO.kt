@@ -3,19 +3,19 @@ package com.mayantsev_vs.features.user
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserResponseRemote(
+data class UserResponseDTO(
     val login: String,
     val username: String
 )
 
 @Serializable
-data class UserReceiveRemote(
+data class UserReceiveDTO(
     val login: String,
     val username: String
 )
 
 @Serializable
-data class UserPasswordReceiveRemote(
+data class UserPasswordReceiveDTO(
     val login: String,
     val password: String,
     val newPassword: String

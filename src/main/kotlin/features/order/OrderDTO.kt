@@ -3,19 +3,19 @@ package com.mayantsev_vs.features.order
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OrderReceiveRemote(
-    val tracks: List<TrackReceiveRemote>,
-    val services: List<ServiceReceiveRemote>
+data class OrderReceiveDTO(
+    val tracks: List<TrackReceiveDTO>,
+    val services: List<ServiceReceiveDTO>
 )
 
 @Serializable
-data class OrderListResponseRemote(
-    val orders: List<OrderResponseRemote>
+data class OrderListResponseDTO(
+    val orders: List<OrderResponseDTO>
 )
 
 @Serializable
-data class OrderResponseRemote(
-    val tracks: List<TrackResponseRemote>,
-    val services: List<ServiceResponseRemote>,
+data class OrderResponseDTO(
+    val tracks: List<TrackResponseDTO>,
+    val services: List<ServiceResponseDTO>,
     val date: String
 )

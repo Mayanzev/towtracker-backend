@@ -16,14 +16,14 @@ import java.util.*
 class RegisterController(private val call: ApplicationCall) {
 
     suspend fun registerNewUser() {
-        val registerReceiveRemote = call.receive<RegisterReceiveRemote>()
-        val hashedPassword = hashPassword(registerReceiveRemote.password)
+        val registerReceiveDTO = call.receive<RegisterReceiveDTO>()
+        val hashedPassword = hashPassword(registerReceiveDTO.password)
 
-        if (!registerReceiveRemote.login.isValidEmail()) {
+        if (!registerReceiveDTO.login.isValidEmail()) {
             call.respond(HttpStatusCode.BadRequest, "Email is not valid")
         }
 
-        val userDTO = Users.fetchUser(registerReceiveRemote.login)
+        val userDTO = Users.fetchUser(registerReceiveDTO.login)
 
         if (userDTO != null) {
             call.respond(HttpStatusCode.Conflict, "User already exists")
@@ -33,9 +33,9 @@ class RegisterController(private val call: ApplicationCall) {
             try {
                 Users.insert(
                     UserDBO(
-                        login = registerReceiveRemote.login,
+                        login = registerReceiveDTO.login,
                         password = hashedPassword,
-                        username = registerReceiveRemote.username
+                        username = registerReceiveDTO.username
                     )
                 )
             } catch (e: ExposedSQLException) {
@@ -44,10 +44,10 @@ class RegisterController(private val call: ApplicationCall) {
 
             Tokens.insert(
                 TokenDBO(
-                    rowId = UUID.randomUUID().toString(), login = registerReceiveRemote.login, token = token
+                    rowId = UUID.randomUUID().toString(), login = registerReceiveDTO.login, token = token
                 )
             )
-            call.respond(RegisterResponseRemote(token = token))
+            call.respond(RegisterResponseDTO(token = token))
         }
     }
 }

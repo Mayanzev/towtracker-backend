@@ -13,7 +13,7 @@ import java.util.*
 class LoginController(private val call: ApplicationCall) {
 
     suspend fun performLogin() {
-        val receive = call.receive<LoginReceiveRemote>()
+        val receive = call.receive<LoginReceiveDTO>()
         val userDTO = Users.fetchUser(receive.login)
 
         if (userDTO == null) {
@@ -28,7 +28,7 @@ class LoginController(private val call: ApplicationCall) {
                         token = token
                     )
                 )
-                call.respond(LoginResponseRemote(token = token))
+                call.respond(LoginResponseDTO(token = token))
             } else {
                 call.respond(HttpStatusCode.BadRequest, "Invalid password")
             }

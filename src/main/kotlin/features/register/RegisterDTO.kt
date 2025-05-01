@@ -3,13 +3,13 @@ package com.mayantsev_vs.features.register
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegisterReceiveRemote (
+data class RegisterReceiveDTO (
     val login: String,
     val password: String,
     val username: String
 )
 
 @Serializable
-data class RegisterResponseRemote (
+data class RegisterResponseDTO (
     val token: String
 )
