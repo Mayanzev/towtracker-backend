@@ -16,38 +16,37 @@ import java.util.*
 class RegisterController(private val call: ApplicationCall) {
 
     suspend fun registerNewUser() {
-        val registerRequestDTO = call.receive<RegisterRequestDTO>()
-        val hashedPassword = hashPassword(registerRequestDTO.password)
+        val request = call.receive<RegisterRequestDTO>()
 
-        if (!registerRequestDTO.login.isValidEmail()) {
+        if (!request.login.isValidEmail()) {
             call.respond(HttpStatusCode.BadRequest, "Email is not valid")
+            return
         }
 
-        val userDTO = Users.fetchUser(registerRequestDTO.login)
-
-        if (userDTO != null) {
+        if (Users.fetchUser(request.login) != null) {
             call.respond(HttpStatusCode.Conflict, "User already exists")
-        } else {
-            val token = UUID.randomUUID().toString()
-
-            try {
-                Users.insert(
-                    UserDBO(
-                        login = registerRequestDTO.login,
-                        password = hashedPassword,
-                        username = registerRequestDTO.username
-                    )
-                )
-            } catch (e: ExposedSQLException) {
-                call.respond(HttpStatusCode.Conflict, "User already exists")
-            }
-
-            Tokens.insert(
-                TokenDBO(
-                    rowId = UUID.randomUUID().toString(), login = registerRequestDTO.login, token = token
-                )
-            )
-            call.respond(RegisterResponseDTO(token = token))
+            return
         }
+
+        val hashedPassword = hashPassword(request.password)
+        val token = UUID.randomUUID().toString()
+
+        Users.insert(
+            UserDBO(
+                login = request.login,
+                password = hashedPassword,
+                username = request.username
+            )
+        )
+
+        Tokens.insert(
+            TokenDBO(
+                rowId = UUID.randomUUID().toString(),
+                login = request.login,
+                token = token
+            )
+        )
+
+        call.respond(RegisterResponseDTO(token = token))
     }
 }
