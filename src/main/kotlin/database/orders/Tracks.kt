@@ -1,7 +1,5 @@
 package com.mayantsev_vs.database.orders
 
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -17,12 +15,12 @@ object Tracks: Table() {
     val firstCity = Tracks.varchar("firstCity", 50)
     val secondCity = Tracks.varchar("secondCity", 50)
 
-    fun getTracks(orderId: Int): List<TracksDTO> {
+    fun getTracks(orderId: Int): List<TracksDBO> {
         return transaction {
             Tracks.selectAll().where {
                 Tracks.orderId eq orderId
             }.map {
-                TracksDTO(
+                TracksDBO(
                     id = it[Tracks.id],
                     time = it[Tracks.time],
                     date = it[Tracks.date],

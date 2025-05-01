@@ -3,14 +3,13 @@ package com.mayantsev_vs.database.orders
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.time.LocalDateTime
 
 object Orders : Table() {
     val id = Orders.integer("id")
     private val date = datetime("date")
     private val login = Orders.varchar("login", 25)
 
-    fun insert(orderDTO: OrdersDTO) {
+    fun insert(orderDTO: OrdersDBO) {
         transaction {
             val rowId = Orders.insertReturning(listOf(Orders.id)) {
                 it[date] = orderDTO.date
@@ -43,7 +42,7 @@ object Orders : Table() {
         }
     }
 
-    fun getOrders(login: String): List<OrdersDTO> {
+    fun getOrders(login: String): List<OrdersDBO> {
         return transaction {
             Orders.selectAll().where {
                 Orders.login eq login
@@ -52,7 +51,7 @@ object Orders : Table() {
                 val tracks = Tracks.getTracks(it[Orders.id])
                 val services = Services.getServices(it[Orders.id])
 
-                OrdersDTO(
+                OrdersDBO(
                     id = it[Orders.id],
                     date = it[Orders.date],
                     tracks = tracks,

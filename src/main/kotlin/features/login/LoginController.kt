@@ -1,6 +1,6 @@
 package com.mayantsev_vs.features.login
 
-import com.mayantsev_vs.database.tokens.TokenDTO
+import com.mayantsev_vs.database.tokens.TokenDBO
 import com.mayantsev_vs.database.tokens.Tokens
 import com.mayantsev_vs.database.users.Users
 import com.mayantsev_vs.utils.verifyPassword
@@ -22,7 +22,7 @@ class LoginController(private val call: ApplicationCall) {
             if (verifyPassword(receive.password, userDTO.password)) {
                 val token = UUID.randomUUID().toString()
                 Tokens.insert(
-                    TokenDTO(
+                    TokenDBO(
                         rowId = UUID.randomUUID().toString(),
                         login = receive.login,
                         token = token

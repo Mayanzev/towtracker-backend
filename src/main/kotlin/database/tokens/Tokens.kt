@@ -10,25 +10,25 @@ object Tokens: Table() {
     private val login = Tokens.varchar("login", 25)
     private val token = Tokens.varchar("token", 50)
 
-    fun insert(tokenDTO: TokenDTO) {
+    fun insert(tokenDBO: TokenDBO) {
         transaction {
             Tokens.insert {
-                it[id] = tokenDTO.rowId
-                it[login] = tokenDTO.login
-                it[token] = tokenDTO.token
+                it[id] = tokenDBO.rowId
+                it[login] = tokenDBO.login
+                it[token] = tokenDBO.token
             }
         }
     }
 
-    fun fetchTokens(): List<TokenDTO> {
+    fun fetchTokens(): List<TokenDBO> {
         return try {
             transaction {
                 Tokens.selectAll().toList()
                     .map {
-                        TokenDTO(
+                        TokenDBO(
                             rowId = it[Tokens.id],
-                            token = it[Tokens.token],
-                            login = it[Tokens.login]
+                            token = it[token],
+                            login = it[login]
                         )
                     }
             }

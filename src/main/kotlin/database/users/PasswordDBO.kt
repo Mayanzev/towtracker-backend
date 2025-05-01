@@ -1,6 +1,6 @@
 package com.mayantsev_vs.database.users
 
-class PasswordDTO (
+class PasswordDBO (
     val login: String,
     val password: String
 )

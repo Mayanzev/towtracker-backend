@@ -1,10 +1,9 @@
 package com.mayantsev_vs.features.user
 
 import com.mayantsev_vs.database.tokens.Tokens
-import com.mayantsev_vs.database.users.PasswordDTO
-import com.mayantsev_vs.database.users.UsernameDTO
+import com.mayantsev_vs.database.users.PasswordDBO
+import com.mayantsev_vs.database.users.UsernameDBO
 import com.mayantsev_vs.database.users.Users
-import com.mayantsev_vs.features.login.LoginReceiveRemote
 import com.mayantsev_vs.utils.TokenCheck
 import com.mayantsev_vs.utils.hashPassword
 import com.mayantsev_vs.utils.verifyPassword
@@ -40,11 +39,11 @@ class UserController(private val call: ApplicationCall) {
         val userReceiveRemote = call.receive<UserReceiveRemote>()
 
         if (TokenCheck.isTokenValid(token.orEmpty())) {
-            val usernameDTO = UsernameDTO(
+            val usernameDBO = UsernameDBO(
                 login = userReceiveRemote.login,
                 username = userReceiveRemote.username
             )
-            Users.updateUsername(usernameDTO)
+            Users.updateUsername(usernameDBO)
             call.respond(HttpStatusCode.OK)
         } else {
             call.respond(HttpStatusCode.Unauthorized, "Token expired")
@@ -60,11 +59,11 @@ class UserController(private val call: ApplicationCall) {
             if (userDTO == null) {
                 call.respond(HttpStatusCode.BadRequest, "User not found")
             } else if (verifyPassword(userPasswordReceiveRemote.password, userDTO.password)) {
-                val passwordDTO = PasswordDTO(
+                val passwordDBO = PasswordDBO(
                     login = userPasswordReceiveRemote.login,
                     password = hashPassword(userPasswordReceiveRemote.newPassword)
                 )
-                Users.updatePassword(passwordDTO)
+                Users.updatePassword(passwordDBO)
                 call.respond(HttpStatusCode.OK)
             } else {
                 call.respond(HttpStatusCode.BadRequest, "Старый пароль введен неверно!")

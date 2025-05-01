@@ -21,10 +21,10 @@ class OrderController(private val call: ApplicationCall) {
             val user = login?.let { Users.fetchUser(login) }
             if (user != null) {
                 Orders.insert(
-                    OrdersDTO(
+                    OrdersDBO(
                         date = LocalDateTime.now(),
                         tracks = orderReceiveRemote.tracks.map {
-                            TracksDTO(
+                            TracksDBO(
                                 it.id,
                                 it.time,
                                 it.date,
@@ -36,7 +36,7 @@ class OrderController(private val call: ApplicationCall) {
                             )
                         },
                         services = orderReceiveRemote.services.map {
-                            ServicesDTO(
+                            ServicesDBO(
                                 it.id,
                                 it.name,
                                 it.price,

@@ -1,8 +1,6 @@
 package com.mayantsev_vs.database.orders
 
-import java.time.LocalDateTime
-
-class TracksDTO(
+class TracksDBO(
     val id: Int,
     val time: String,
     val date: String,

@@ -1,6 +1,5 @@
 package com.mayantsev_vs.database.users
 
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
@@ -12,21 +11,21 @@ object Users: Table() {
     private val password = Users.varchar("password", 75)
     private val username = Users.varchar("username", 30)
 
-    fun insert(userDTO: UserDTO) {
+    fun insert(userDBO: UserDBO) {
         transaction {
             Users.insert {
-                it[login] = userDTO.login
-                it[password] = userDTO.password
-                it[username] = userDTO.username
+                it[login] = userDBO.login
+                it[password] = userDBO.password
+                it[username] = userDBO.username
             }
         }
     }
 
-    fun fetchUser(login: String): UserDTO? {
+    fun fetchUser(login: String): UserDBO? {
         return try {
             transaction {
                 val userModel = Users.selectAll().where { Users.login eq login }.single()
-                UserDTO(
+                UserDBO(
                     login = userModel[Users.login],
                     password = userModel[password],
                     username = userModel[username]
@@ -37,20 +36,20 @@ object Users: Table() {
         }
     }
 
-    fun updateUsername(usernameDTO: UsernameDTO) {
+    fun updateUsername(usernameDBO: UsernameDBO) {
         transaction {
-            Users.update ({ login eq usernameDTO.login }) {
-                it[login] = usernameDTO.login
-                it[username] = usernameDTO.username
+            Users.update ({ login eq usernameDBO.login }) {
+                it[login] = usernameDBO.login
+                it[username] = usernameDBO.username
             }
         }
     }
 
-    fun updatePassword(passwordDTO: PasswordDTO) {
+    fun updatePassword(passwordDBO: PasswordDBO) {
         transaction {
-            Users.update ({ login eq passwordDTO.login }) {
-                it[login] = passwordDTO.login
-                it[password] = passwordDTO.password
+            Users.update ({ login eq passwordDBO.login }) {
+                it[login] = passwordDBO.login
+                it[password] = passwordDBO.password
             }
         }
     }

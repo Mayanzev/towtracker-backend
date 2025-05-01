@@ -1,6 +1,6 @@
 package com.mayantsev_vs.database.users
 
-class UsernameDTO (
+class UsernameDBO (
     val login: String,
     val username: String
 )

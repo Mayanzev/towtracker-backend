@@ -1,8 +1,8 @@
 package com.mayantsev_vs.features.register
 
-import com.mayantsev_vs.database.tokens.TokenDTO
+import com.mayantsev_vs.database.tokens.TokenDBO
 import com.mayantsev_vs.database.tokens.Tokens
-import com.mayantsev_vs.database.users.UserDTO
+import com.mayantsev_vs.database.users.UserDBO
 import com.mayantsev_vs.database.users.Users
 import com.mayantsev_vs.utils.hashPassword
 import com.mayantsev_vs.utils.isValidEmail
@@ -32,7 +32,7 @@ class RegisterController(private val call: ApplicationCall) {
 
             try {
                 Users.insert(
-                    UserDTO(
+                    UserDBO(
                         login = registerReceiveRemote.login,
                         password = hashedPassword,
                         username = registerReceiveRemote.username
@@ -43,7 +43,7 @@ class RegisterController(private val call: ApplicationCall) {
             }
 
             Tokens.insert(
-                TokenDTO(
+                TokenDBO(
                     rowId = UUID.randomUUID().toString(), login = registerReceiveRemote.login, token = token
                 )
             )
