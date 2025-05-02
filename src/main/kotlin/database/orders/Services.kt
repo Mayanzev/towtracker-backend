@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object Services: Table() {
     val id = Services.integer("id")
     val orderId = reference("orderId", Orders.id)
-    val name = Services.varchar("name", 50)
+    val name = Services.varchar("name", 100)
     val price = Services.varchar("price", 20)
     val date = Services.varchar("date", 20)
 

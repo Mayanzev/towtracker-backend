@@ -12,8 +12,8 @@ object Tracks: Table() {
     val distance = Tracks.varchar("distance", 50)
     val speed = Tracks.varchar("speed", 20)
     val price = Tracks.varchar("price", 20)
-    val firstCity = Tracks.varchar("firstCity", 50)
-    val secondCity = Tracks.varchar("secondCity", 50)
+    val firstCity = Tracks.varchar("firstCity", 100)
+    val secondCity = Tracks.varchar("secondCity", 100)
 
     fun getTracks(orderId: Int): List<TracksDBO> {
         return transaction {

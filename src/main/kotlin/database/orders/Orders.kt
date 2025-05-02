@@ -9,14 +9,14 @@ object Orders : Table() {
     private val date = datetime("date")
     private val login = Orders.varchar("login", 25)
 
-    fun insert(orderDTO: OrdersDBO) {
+    fun insert(orderDBO: OrdersDBO) {
         transaction {
             val rowId = Orders.insertReturning(listOf(Orders.id)) {
-                it[date] = orderDTO.date
-                it[login] = orderDTO.login
+                it[date] = orderDBO.date
+                it[login] = orderDBO.login
             }.map { it[Orders.id] }
 
-            orderDTO.tracks.forEach { trackDTO ->
+            orderDBO.tracks.forEach { trackDTO ->
                 Tracks.insert {
                     it[id] = trackDTO.id
                     it[orderId] = rowId.first()
@@ -30,7 +30,7 @@ object Orders : Table() {
                 }
             }
 
-            orderDTO.services.forEach { serviceDTO ->
+            orderDBO.services.forEach { serviceDTO ->
                 Services.insert {
                     it[id] = serviceDTO.id
                     it[orderId] = rowId.first()

@@ -9,10 +9,3 @@ data class ServiceRequestDTO(
     val price: String,
     val date: String
 )
-
-@Serializable
-data class ServiceResponseDTO(
-    val name: String,
-    val price: String,
-    val date: String
-)

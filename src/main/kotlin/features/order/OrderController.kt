@@ -9,6 +9,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class OrderController(private val call: ApplicationCall) {
 
@@ -22,7 +23,7 @@ class OrderController(private val call: ApplicationCall) {
             if (user != null) {
                 Orders.insert(
                     OrdersDBO(
-                        date = LocalDateTime.now(),
+                        date = LocalDateTime.now().withNano(0),
                         tracks = orderRequestDTO.tracks.map {
                             TracksDBO(
                                 it.id,
@@ -61,29 +62,24 @@ class OrderController(private val call: ApplicationCall) {
         if (TokenCheck.isTokenValid(token.orEmpty())) {
             val login = token?.let { Tokens.fetchLogin(it) }
             val user = login?.let { Users.fetchUser(login) }
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
             if (user != null) {
                 val orderListRemote = OrderListResponseDTO(
                     Orders.getOrders(login).map { order ->
+
+                        var price = 0.0
+                        order.tracks.forEach { track ->
+                            price += track.price.toDouble()
+                        }
+                        order.services.forEach { service ->
+                            price += service.price.toDouble()
+                            println(service.price.toDouble())
+                        }
+                        println(price)
+
                         OrderResponseDTO(
-                            order.tracks.map {
-                                TrackResponseDTO(
-                                    time = it.time,
-                                    date = it.date,
-                                    distance = it.distance,
-                                    speed = it.speed,
-                                    price = it.price,
-                                    firstCity = it.firstCity,
-                                    secondCity = it.secondCity
-                                )
-                            },
-                            order.services.map {
-                                ServiceResponseDTO(
-                                    name = it.name,
-                                    price = it.price,
-                                    date = it.date
-                                )
-                            },
-                            date = order.date.toString()
+                            date = order.date.format(formatter),
+                            price = price.toString()
                         )
                     }
                 )

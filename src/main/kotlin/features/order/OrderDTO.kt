@@ -15,7 +15,6 @@ data class OrderListResponseDTO(
 
 @Serializable
 data class OrderResponseDTO(
-    val tracks: List<TrackResponseDTO>,
-    val services: List<ServiceResponseDTO>,
-    val date: String
+    val date: String,
+    val price: String
 )
