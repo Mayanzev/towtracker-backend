@@ -49,10 +49,10 @@ class OrderController(private val call: ApplicationCall) {
                 )
                 call.respond(HttpStatusCode.OK)
             } else {
-                call.respond(HttpStatusCode.BadRequest, "User not found")
+                call.respond(HttpStatusCode.BadRequest, "Пользователь не найден")
             }
         } else {
-            call.respond(HttpStatusCode.Unauthorized, "Token expired")
+            call.respond(HttpStatusCode.Unauthorized, "Срок действия токена истек")
         }
     }
 
@@ -73,9 +73,7 @@ class OrderController(private val call: ApplicationCall) {
                         }
                         order.services.forEach { service ->
                             price += service.price.toDouble()
-                            println(service.price.toDouble())
                         }
-                        println(price)
 
                         OrderResponseDTO(
                             date = order.date.format(formatter),
@@ -85,10 +83,10 @@ class OrderController(private val call: ApplicationCall) {
                 )
                 call.respond(orderListRemote)
             } else {
-                call.respond(HttpStatusCode.BadRequest, "User not found")
+                call.respond(HttpStatusCode.BadRequest, "Пользователь не найден")
             }
         } else {
-            call.respond(HttpStatusCode.Unauthorized, "Token expired")
+            call.respond(HttpStatusCode.Unauthorized, "Срок действия токена истек")
         }
     }
 }

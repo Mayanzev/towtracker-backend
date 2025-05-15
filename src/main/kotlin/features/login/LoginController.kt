@@ -17,7 +17,7 @@ class LoginController(private val call: ApplicationCall) {
         val userDTO = Users.fetchUser(loginRequestDTO.login)
 
         if (userDTO == null) {
-            call.respond(HttpStatusCode.BadRequest, "User not found")
+            call.respond(HttpStatusCode.BadRequest, "Пользователь не найден")
         } else {
             if (verifyPassword(loginRequestDTO.password, userDTO.password)) {
                 val token = UUID.randomUUID().toString()
@@ -30,7 +30,7 @@ class LoginController(private val call: ApplicationCall) {
                 )
                 call.respond(LoginResponseDTO(token = token))
             } else {
-                call.respond(HttpStatusCode.BadRequest, "Invalid password")
+                call.respond(HttpStatusCode.BadRequest, "Неверный пароль")
             }
         }
     }

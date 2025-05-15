@@ -19,12 +19,12 @@ class RegisterController(private val call: ApplicationCall) {
         val request = call.receive<RegisterRequestDTO>()
 
         if (!request.login.isValidEmail()) {
-            call.respond(HttpStatusCode.BadRequest, "Email is not valid")
+            call.respond(HttpStatusCode.BadRequest, "Неверная форма email")
             return
         }
 
         if (Users.fetchUser(request.login) != null) {
-            call.respond(HttpStatusCode.Conflict, "User already exists")
+            call.respond(HttpStatusCode.Conflict, "Такой пользователь уже существует")
             return
         }
 

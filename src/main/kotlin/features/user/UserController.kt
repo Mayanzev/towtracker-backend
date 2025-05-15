@@ -27,10 +27,10 @@ class UserController(private val call: ApplicationCall) {
                 )
                 call.respond(userRemote)
             } else {
-                call.respond(HttpStatusCode.BadRequest, "User not found")
+                call.respond(HttpStatusCode.BadRequest, "Пользователь не найден")
             }
         } else {
-            call.respond(HttpStatusCode.Unauthorized, "Token expired")
+            call.respond(HttpStatusCode.Unauthorized, "Срок действия токена истек")
         }
     }
 
@@ -46,7 +46,7 @@ class UserController(private val call: ApplicationCall) {
             Users.updateUsername(usernameDBO)
             call.respond(HttpStatusCode.OK)
         } else {
-            call.respond(HttpStatusCode.Unauthorized, "Token expired")
+            call.respond(HttpStatusCode.Unauthorized, "Срок действия токена истек")
         }
     }
 
@@ -57,7 +57,7 @@ class UserController(private val call: ApplicationCall) {
 
         if (TokenCheck.isTokenValid(token.orEmpty())) {
             if (userRequestDTO == null) {
-                call.respond(HttpStatusCode.BadRequest, "User not found")
+                call.respond(HttpStatusCode.BadRequest, "Пользователь не найден")
             } else if (verifyPassword(userPasswordRequestDTO.password, userRequestDTO.password)) {
                 val passwordDBO = PasswordDBO(
                     login = userPasswordRequestDTO.login,
@@ -66,10 +66,10 @@ class UserController(private val call: ApplicationCall) {
                 Users.updatePassword(passwordDBO)
                 call.respond(HttpStatusCode.OK)
             } else {
-                call.respond(HttpStatusCode.BadRequest, "Старый пароль введен неверно!")
+                call.respond(HttpStatusCode.BadRequest, "Старый пароль введен неверно")
             }
         } else {
-            call.respond(HttpStatusCode.Unauthorized, "Token expired")
+            call.respond(HttpStatusCode.Unauthorized, "Срок действия токена истек")
         }
     }
 
