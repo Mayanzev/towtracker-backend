@@ -6,7 +6,7 @@ import { check, sleep } from 'k6';
 
 export let options = {
   vus: 100,
-  duration: '10s',
+  duration: '1m',
 };
 
 const token = '9adfbe27-ee62-4a1d-b06f-4cdfff2f9896';
